@@ -1,7 +1,7 @@
-// Built in node functionality to get command line args
-// Src: https://stackabuse.com/command-line-arguments-in-node-js/#:~:text=command()%20option%2C%20which%20helps,argv)%20%3D%3E%20%7B%20console. 
+// Built in node functionality to get command line args. Src: https://stackabuse.com/command-line-arguments-in-node-js/#:~:text=command()%20option%2C%20which%20helps,argv)%20%3D%3E%20%7B%20console. 
+// RegEx checker with regEx for http and https links: https://www.regexpal.com/?fam=104034
+// Top 15 Commonly Used Regex: https://digitalfortress.tech/tricks/top-15-commonly-used-regex/
 
-// RegRx useful source: https://blog.bitsrc.io/a-beginners-guide-to-regular-expressions-regex-in-javascript-9c58feb27eb4
 
 /*first index contains the path to our node executable, second index contains the path to the script file
 rest of the indexes contain the arguments that we passed in their respective sequence.*/
@@ -9,14 +9,9 @@ rest of the indexes contain the arguments that we passed in their respective seq
 let fs = require('fs');
 let linesArr = [];
 let linkArr = [];
-let regEx = /abc/ // so now I need to find a regEx for links??
-// need to add escape characters
-//let regEx = https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
+let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
 
-// Stack Overflow: https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
-// might be this (original): https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
-// However they did not escape the end.
-// https://regexr.com/37i6s
+
 
 console.log(process.argv.length); 
 if (process.argv.length < 3) { // will always be at least 2
@@ -32,8 +27,11 @@ if (process.argv.length < 3) { // will always be at least 2
 
     for (let i = 0; i < linesArr.length; i++) {
        if(regEx.test(linesArr[i])){ // if its true (match has been found)
-        var result = regEx.exec(linesArr[i]); // store the match. **Create and populate variable**
-        linkArr.push(result[0]); // push into array 
+        //console.log("The link found is " + linesArr[i]);
+         // console.log(regEx.exec(linesArr[i])); -> null for some reason-> This did not work, had to use match instead
+
+        var result = linesArr[i].match(regEx); // store the match. **Create and populate variable**
+        linkArr.push(result); // push into array 
        }
     }
     
