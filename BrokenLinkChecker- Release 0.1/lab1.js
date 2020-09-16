@@ -10,6 +10,13 @@ let fs = require('fs');
 let linesArr = [];
 let linkArr = [];
 let regEx = /abc/ // so now I need to find a regEx for links??
+// need to add escape characters
+//let regEx = https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
+
+// Stack Overflow: https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+// might be this (original): https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)
+// However they did not escape the end.
+// https://regexr.com/37i6s
 
 console.log(process.argv.length); 
 if (process.argv.length < 3) { // will always be at least 2
