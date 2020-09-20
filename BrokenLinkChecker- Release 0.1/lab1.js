@@ -8,19 +8,16 @@ var regexConst = new RegExp('abc');
 var regexLiteral = /abc/;
 */
 
-// Multpile links on one line dosent always work
 
 /*first index contains the path to our node executable, second index contains the path to the script file
 rest of the indexes contain the arguments that we passed in their respective sequence.*/
 const packageJson = require('./package.json');
-// Check if the first argument after the program name has -v if so then pull the version from this
-const fetch = require("node-fetch");
+const fetch = require("node-fetch"); // to get program version
 const fs = require('fs');
 const colors = require('colors');
 let linesArr = [];
 let linkArr = [];
 let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
-
 
 if (process.argv.length < 3) { // will always be at least 2
     console.log("ERROR: Please enter command line argument (name of file to be processed).");
@@ -33,10 +30,18 @@ if (process.argv.length < 3) { // will always be at least 2
         for (let i = 0; i < linesArr.length; i++) {
             if (regEx.test(linesArr[i])) { // if its true (match has been found)
                 var result = linesArr[i].match(regEx); // store the match. **Create and populate variable** (exec did not work, had to use match instead)
+        
+                // If result.length is > then 1 (had more then one link on one line) we need to grab each index.
+               if(result.length > 1){
+                   for(let i = 0; i < result.length; i++){
+                        linkArr.push(result[i]);
+                   }
+               } else{
                 linkArr.push(result); // push into array 
+               }
             }
         }
-
+    
         for (let i = 0; i < linkArr.length; i++) {
             fetch(linkArr[i]).then(response => {
                 if (response.status == 200) { // good
