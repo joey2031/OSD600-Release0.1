@@ -12,3 +12,4 @@
 - Update 5: Added second additional feature running the tool with the v or version argument should print the name of the tool and its version. When there are multpile links on one line it is still a bit buggy. Other then that there is nothing else I need to fix! [Sept 16 2020 7:54 PM]
 
 - Update 6: Fixed some bugs, it is now able to read multple links in one line. Turns out I forgot to check the length of the result array to see if there is more then one link that was extracted from the line: if result.length > 1. Everything seems to work now I just need to make a blog post about this on Blogger! [Sept 20 2020 12:32AM]
+- Update 7: Blog post on Blogger is done! Blog post link: https://osd600-joey-assal.blogspot.com/2020/09/osd600-release-01.html [Sept 20 2020 2:13AM]
