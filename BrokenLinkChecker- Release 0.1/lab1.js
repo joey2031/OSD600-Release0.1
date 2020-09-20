@@ -31,7 +31,7 @@ if (process.argv.length < 3) { // will always be at least 2
             if (regEx.test(linesArr[i])) { // if its true (match has been found)
                 var result = linesArr[i].match(regEx); // store the match. **Create and populate variable** (exec did not work, had to use match instead)
         
-                // If result.length is > then 1 (had more then one link on one line) we need to grab each index.
+                // If result.length is > then 1 (have more then one link on one line) we need to grab each index.
                if(result.length > 1){
                    for(let i = 0; i < result.length; i++){
                         linkArr.push(result[i]);
