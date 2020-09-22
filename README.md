@@ -1,8 +1,11 @@
 # OSD600-Release0.1
-
 <u>Description of Tool</u>
 - This is a command line tool that takes a file as input, reads and finds http:// and https:// links throughout the file and tells the user which ones are working and which ones are broken. Example usage: node lab1.js test.html
 - The tool will output all of the links in different colours: red (broken), green (not broken) unknown (grey). You may also give the agrument v or version to check the current version of the tool. If the user enters no arguments a standard help/usage message showing how to run the tool, which command line arguments can be passed will be showen. 
+
+<u>How to use</u>
+- Download the repository although the node_modules are in there run npm install to make sure everything is installed properly. I already have some test files in the project so you can pick one of thoes or create your own 
+
 
 <u>Updates</u>
 - Update 1: I noticed I was making things harder then they need to be. Instead of using the readLine api I used fs.readFileSync. Now I need to see how RegEx works in Javascript. [Sept 15 2020 12:32 PM]
