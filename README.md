@@ -4,7 +4,7 @@
 - The tool will output all of the links in different colours: red (broken), green (not broken) unknown (grey). You may also give the agrument v or version to check the current version of the tool. If the user enters no arguments a standard help/usage message showing how to run the tool, which command line arguments can be passed will be showen. 
 
 <u>How to use</u>
-<u> NOTE: YOU MUST HAVE NODE INSTALLED ON YOUR MACHINE FOR THIS TO WORK </u>
+<u>NOTE: YOU MUST HAVE NODE INSTALLED ON YOUR MACHINE FOR THIS TO WORK</u>
 - Download the repository
 - Although the node_modules are in there run npm install to make sure everything is installed properly.  
 - open terminal and go to OSD600-Release0.1\BrokenLinkChecker- Release 0.1 directory
