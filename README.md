@@ -8,7 +8,7 @@
 1. Download the repository
 2. Although the node_modules are in there run npm install to make sure everything is installed properly.  
 3. open terminal and go to OSD600-Release0.1\BrokenLinkChecker- Release 0.1 directory
-4. node lab1.js test.html (or a different file) I already have some test files in the project so you can pick one of thoes or create your own
+4. In the terminal run: node lab1.js test.html (or a different file) there are already have some test files in the project so you can pick one of thoes or create your own
 
 
 <u>Updates</u>
