@@ -16,7 +16,7 @@ const fetch = require("node-fetch"); // to get program version
 const fs = require('fs');
 const colors = require('colors');
 const dns=require('dns'); //dns resolver
-const rrtype="A" //IPv4 address
+const rrtype="AAAA" //IPv6 address
 
 let linesArr = [];
 let linkArr = [];
