@@ -43,7 +43,7 @@ if (process.argv.length < 3) { // will always be at least 2
         }
     
         for (let i = 0; i < linkArr.length; i++) {
-            fetch(linkArr[i]).then(response => {
+            fetch(linkArr[i],{method: "HEAD"}).then(response => {
                 if (response.status == 200) { // good
                     console.log(`${linkArr[i]} was good! status: ${response.status}`.green);
                 } else if (response.status == 404 || response.status == 401) { // bad
