@@ -49,8 +49,6 @@ if (process.argv.length < 3) { // will always be at least 2
             }
         }
 
-
-        // Its not waiting for some reason
         makeCalls().then(() => {
             console.log(allGood)
             console.log("Done");
@@ -63,38 +61,47 @@ if (process.argv.length < 3) { // will always be at least 2
 
 
 
+// Status undefined
 function makeCalls() {
-    return new Promise(function (resolve, reject) {
-        console.log("Inside promise function!");
-        for (let i = 0; i < linkArr.length; i++) {
-            console.log(allGood);
-            fetch(linkArr[i], { method: "HEAD" }).then(response => {
-                if (response.status == 200) { // good
-                    console.log(`${linkArr[i]} was good! status: ${response.status}`.green);
-                } else if (response.status == 404 || response.status == 401) { // bad
-                    console.log(`${linkArr[i]} was bad! status: ${response.status}`.red);
-                    allGood = false; 
-                } else { // unknown
-                    console.log(`${linkArr[i]} was unknown! status: ${response.status}`.gray);
-                }
+    return Promise.all(linkArr.map(link => fetch(link, { method: "HEAD" })
+        .then(() => {
+            var linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
+            dns.resolve(linkN, rrtype, (err, records) => console.log('records: %j', records));
+        }).then(response =>{
+            if (response.status == 200) { // good
+                console.log(`${link} was good! status: ${response.status}`.green);
+            } else if (response.status == 404 || response.status == 401) { // bad
+                console.log(`${link} was bad! status: ${response.status}`.red);
+                allGood = false;
+            } else { // unknown
+                console.log(`${link} was unknown! status: ${response.status}`.gray);
+            }
 
-            }).then(() => { // this is not waiting, is that ok?
-                //DNS resolver 
-                var linkN = linkArr[i].toString().replace(/(^\w+:|^)\/\//, '');
-                dns.resolve(linkN, rrtype, (err, records) =>
-                    console.log('records: %j', records))
-            }).catch((err) => {
-                    console.log(err)
-                });
-        } 
-        resolve();
-    })
+        }).catch(err => {
+            console.log(err);
+        })));
 }
 
 
 
+// Not correct order.
+function makeCalls() {
+    return Promise.all(linkArr.map(link => fetch(link, { method: "HEAD" })
+        .then((response) => {
 
-
-
-
+            if (response.status == 200) { // good
+                console.log(`${link} was good! status: ${response.status}`.green);
+            } else if (response.status == 404 || response.status == 401) { // bad
+                console.log(`${link} was bad! status: ${response.status}`.red);
+                allGood = false;
+            } else { // unknown
+                console.log(`${link} was unknown! status: ${response.status}`.gray);
+            }
+        }).then(() =>{
+            var linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
+            dns.resolve(linkN, rrtype, (err, records) => console.log('records: %j', records));
+        }).catch(err => {
+            console.log(err);
+        })));
+}
 
