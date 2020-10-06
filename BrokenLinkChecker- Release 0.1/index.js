@@ -17,6 +17,7 @@ const fs = require('fs');
 const colors = require('colors'); // TODO see if I can take out
 const util = require('util');
 const dns = require('dns'); //dns resolver
+const { resolve } = require('path');
 const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA" //IPv6 address
 let allGood = true; // assume all links are good
@@ -65,39 +66,7 @@ if (process.argv.length < 3) { // will always be at least 2
 
 
 /*
-// Cannot read property 'status' of undefined
-function makeCalls() {
-    return Promise.all(linkArr.map(link => fetch(link, { method: "HEAD" })
-        .then(() => {
-            var linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
-            dnsPromise(linkN, rrtype)
-            .then((err, records) =>{ // src: https://arjunphp.com/convert-callback-function-promise
-                console.log('records: %j', records)
-            }).catch((err) =>{
-                //console.log(err);
-                console.log("bad link!");
-            });
-            // Keeps saying status is undefied
-        }).then((response) =>{
-            if (response.status == 200) { // good
-                console.log(`${link} was good! status: ${response.status}`.green);
-            } else if (response.status == 404 || response.status == 401) { // bad
-                console.log(`${link} was bad! status: ${response.status}`.red);
-                allGood = false;
-            } else { // unknown
-                console.log(`${link} was unknown! status: ${response.status}`.gray);
-            }
-
-        }).catch(err => {
-            console.log(err);
-        })));
-}
-*/
-
-
-
-
-// Original code Kind of working...
+Using then() not working
 function makeCalls() {
     return Promise.all(linkArr.map(link => fetch(link, { method: "HEAD" })
         .then((response) => {
@@ -111,15 +80,53 @@ function makeCalls() {
             }
         }).then(() =>{
             var linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
-           // dns.resolve(linkN, rrtype, (err, records) => console.log('records: %j', records));
            dnsPromise(linkN, rrtype)
            .then((err, records) =>{
-            console.log('records: %j', records)
+           // console.log('records: %j', records);
+            //resolve(records);
+            resolve(res);
            }).catch(err => {
-            console.log(err); // error happens with good links??
+             //console.log(err); // error happens with good links??
            })
         }).catch(err => {
             console.log(err);
-        })));
+        }))
+        ).then(data =>{ // for Promise.all
+            console.log(data);
+           // resolve(data);
+        }).catch(err => {
+            console.log(err);
+        });
 }
+*/
 
+
+
+function makeCalls() {
+    return Promise.all(
+      linkArr.map(async link => {
+        try {
+          const response = await fetch(link, { method: "HEAD" });
+          if (response.status == 200) { // good
+              console.log(`${link} was good! status: ${response.status}`.green);
+          } else if (response.status == 404 || response.status == 401) { // bad
+              console.log(`${link} was bad! status: ${response.status}`.red);
+              allGood = false;
+          } else { // unknown
+              console.log(`${link} was unknown! status: ${response.status}`.gray);
+          }
+  
+          const linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
+          await dnsPromise(linkN, rrtype)
+          return "Hello from the inner Promise";
+        } catch(err) {
+          console.log(err);
+        }
+      }
+    ).then(data =>{ // for Promise.all
+      console.log(data);
+      resolve();
+    }).catch(err => {
+      console.log(err);
+    }));
+  }
