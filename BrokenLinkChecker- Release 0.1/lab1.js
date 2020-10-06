@@ -15,9 +15,13 @@ const packageJson = require('./package.json');
 const fetch = require("node-fetch"); // to get program version
 const fs = require('fs');
 const colors = require('colors');
+const dns=require('dns'); //dns resolver
+const rrtype="AAAA" //IPv6 address
+
 let linesArr = [];
 let linkArr = [];
 let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
+
 
 if (process.argv.length < 3) { // will always be at least 2
     console.log("ERROR: Please enter command line argument (name of file to be processed).");
@@ -51,6 +55,12 @@ if (process.argv.length < 3) { // will always be at least 2
                 } else { // unknown
                     console.log(`${linkArr[i]} was unknown! status: ${response.status}`.gray);
                 }
+
+                //DNS resolver
+                var linkN = link.replace(/(^\w+:|^)\/\//, '');  
+                dns.resolve(linkN,rrtype,(err,records)=>
+                console.log('records: %j',records))
+
             })
         }
     }
