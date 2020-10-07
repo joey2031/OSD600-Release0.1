@@ -26,7 +26,6 @@ let allGood = true; // assume all links are good
 
 
 let linesArr = [];
-let linkArr = [];
 let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
 
 
@@ -38,6 +37,7 @@ if (process.argv.length < 3) { // will always be at least 2
     } else {
         // Each index in the array stores a line in the file
         linesArr = fs.readFileSync(process.argv[2], 'utf8').split('\n');
+        const linkArr = [];
         for (let i = 0; i < linesArr.length; i++) {
             if (regEx.test(linesArr[i])) { // if its true (match has been found)
                 var result = linesArr[i].match(regEx); // store the match. **Create and populate variable** (exec did not work, had to use match instead)
@@ -53,9 +53,10 @@ if (process.argv.length < 3) { // will always be at least 2
             }
         }
 
-        makeCalls().then(() => {
+        makeCalls(linkArr).then((data) => {
             console.log(allGood)
             console.log("Done");
+            console.log("All Good", data.every(result => result === true))
         }).catch((err) => {
             console.log(err)
         });
@@ -63,70 +64,28 @@ if (process.argv.length < 3) { // will always be at least 2
     }
 }
 
+function makeCalls(links) {
+    async function processLink(link) {
+        try {
+            const response = await fetch(link, { method: "HEAD" });
+            let isGood = false;
 
-
-/*
-Using then() not working
-function makeCalls() {
-    return Promise.all(linkArr.map(link => fetch(link, { method: "HEAD" })
-        .then((response) => {
             if (response.status == 200) { // good
                 console.log(`${link} was good! status: ${response.status}`.green);
+                isGood = true;
             } else if (response.status == 404 || response.status == 401) { // bad
                 console.log(`${link} was bad! status: ${response.status}`.red);
-                allGood = false;
             } else { // unknown
                 console.log(`${link} was unknown! status: ${response.status}`.gray);
             }
-        }).then(() =>{
-            var linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
-           dnsPromise(linkN, rrtype)
-           .then((err, records) =>{
-           // console.log('records: %j', records);
-            //resolve(records);
-            resolve(res);
-           }).catch(err => {
-             //console.log(err); // error happens with good links??
-           })
-        }).catch(err => {
-            console.log(err);
-        }))
-        ).then(data =>{ // for Promise.all
-            console.log(data);
-           // resolve(data);
-        }).catch(err => {
-            console.log(err);
-        });
-}
-*/
-
-
-
-function makeCalls() {
-    return Promise.all(
-      linkArr.map(async link => {
-        try {
-          const response = await fetch(link, { method: "HEAD" });
-          if (response.status == 200) { // good
-              console.log(`${link} was good! status: ${response.status}`.green);
-          } else if (response.status == 404 || response.status == 401) { // bad
-              console.log(`${link} was bad! status: ${response.status}`.red);
-              allGood = false;
-          } else { // unknown
-              console.log(`${link} was unknown! status: ${response.status}`.gray);
-          }
-  
-          const linkN = link.toString().replace(/(^\w+:|^)\/\//, '');
-          await dnsPromise(linkN, rrtype)
-          return "Hello from the inner Promise";
+    
+            const linkN = new URL(link).hostname;
+            await dnsPromise(linkN);
+            return isGood;
         } catch(err) {
-          console.log(err);
+            console.log(err);
         }
-      }
-    ).then(data =>{ // for Promise.all
-      console.log(data);
-      resolve();
-    }).catch(err => {
-      console.log(err);
-    }));
-  }
+    }
+    
+    return Promise.all(links.map(processLink));
+}
