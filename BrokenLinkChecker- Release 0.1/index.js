@@ -14,13 +14,12 @@ rest of the indexes contain the arguments that we passed in their respective seq
 const packageJson = require('./package.json');
 const fetch = require("node-fetch"); // to get program version
 const fs = require('fs');
-const colors = require('colors'); // TODO see if I can take out
+const colors = require('colors'); 
 const util = require('util');
 const dns = require('dns'); //dns resolver
 const { resolve } = require('path');
 const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA" //IPv6 address
-let allGood = true; // assume all links are good
 
 
 
@@ -53,14 +52,27 @@ if (process.argv.length < 3) { // will always be at least 2
             }
         }
 
-        makeCalls(linkArr).then((data) => {
-            console.log(allGood)
-            console.log("Done");
-            console.log("All Good", data.every(result => result === true))
+        makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
+            /*
+           The every() method tests whether all elements in the array pass the test
+           In this case check each result in the array is == true 
+           console.log("All Good", data.every(result => result === true))
+
+           Note: Calling process.exit() will force the process to exit as quickly as possible even if there
+           are still asynchronous operations pending that have not yet completed fully, including I/O operations
+           to process.stdout and process.stderr. In most situations, it is not actually necessary to call
+           process.exit() explicitly src: https://nodejs.org/api/process.html#process_process_exit_code
+             */
+            if(data.every(result => result === true)){
+                console.log("exit with 0 for good");
+                process.exitCode = 0; // better wat instead of  process.exit() 
+            } else {
+                console.log("exit with 1 for bad");
+                process.exitCode = 1;
+            }
         }).catch((err) => {
             console.log(err)
         });
-
     }
 }
 
@@ -86,6 +98,10 @@ function makeCalls(links) {
             console.log(err);
         }
     }
-    
+    // Promise.all will take an array of promises and returns a single Promise that 
+    //resolves to an array of the results of the input promises
+    // links.map(processLink) creates a new array populated with the results
+    // of calling a provided function on every element in the calling array.
+    // We could of done it like this or using an arrow function inside.
     return Promise.all(links.map(processLink));
 }
