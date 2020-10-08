@@ -48,9 +48,7 @@ if (process.argv.length < 3) { // will always be at least 2
                 }
             }
         }
-
-        makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
-            /*
+        /*
            The every() method tests whether all elements in the array pass the test
            In this case check each result in the array is == true 
            console.log("All Good", data.every(result => result === true))
@@ -59,12 +57,14 @@ if (process.argv.length < 3) { // will always be at least 2
            are still asynchronous operations pending that have not yet completed fully, including I/O operations
            to process.stdout and process.stderr. In most situations, it is not actually necessary to call
            process.exit() explicitly src: https://nodejs.org/api/process.html#process_process_exit_code
-             */
+        */
+
+        makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
             if (data.every(result => result === true)) {
-                console.log("exit with 0 for good");
-                process.exitCode = 0; // better wat instead of  process.exit() 
+                console.log("exit with 0 for good - Note if using flag output of links may not be accurate");
+                process.exitCode = 0; // better way instead of  process.exit() 
             } else {
-                console.log("exit with 1 for bad");
+                console.log("exit with 1 for bad- Note if using flag output of links may not be accurate");
                 process.exitCode = 1;
             }
         }).catch((err) => {
@@ -74,17 +74,15 @@ if (process.argv.length < 3) { // will always be at least 2
 }
 
 // Promise.all will take an array of promises and returns a single Promise that 
-//resolves to an array of the results of the input promises
-// links.map(processLink) creates a new array populated with the results
-// of calling a provided function on every element in the calling array.
-// We could of done it like this or using an arrow function inside.
+// resolves to an array of the results of the input promises. (really just returning an 
+// array of resolved promises). links.map(processLink) creates a new array 
+// populated with these results. We could of done it like this or using an
+// arrow function inside.
 function makeCalls(links) {
     return Promise.all(links.map(processLink));
 }
 
 async function processLink(link) {
-    // Still need to do some testing and see how efficent this is
-    // Maybe leave as before but push in specified arrays
     try {
         const response = await fetch(link, { method: "HEAD" });
         let isGood = false;
