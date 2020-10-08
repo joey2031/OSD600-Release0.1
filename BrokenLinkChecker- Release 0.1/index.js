@@ -48,7 +48,8 @@ if (process.argv.length < 3) { // will always be at least 2
                 }
             }
         }
-        /*
+
+            /*
            The every() method tests whether all elements in the array pass the test
            In this case check each result in the array is == true 
            console.log("All Good", data.every(result => result === true))
@@ -65,6 +66,12 @@ if (process.argv.length < 3) { // will always be at least 2
                 process.exitCode = 0; // better way instead of  process.exit() 
             } else {
                 console.log("exit with 1 for bad- Note if using flag output of links may not be accurate");
+             
+            if(data.every(result => result === true)){
+                console.log("exit with 0 for good");
+                process.exitCode = 0; // better wat instead of  process.exit() 
+            } else {
+                console.log("exit with 1 for bad");
                 process.exitCode = 1;
             }
         }).catch((err) => {
@@ -106,7 +113,6 @@ async function processLink(link) {
             } else { // unknown
                 console.log(`${link} was unknown! status: ${response.status}`.gray);
             }
-
         }
         const linkN = new URL(link).hostname;
         await dnsPromise(linkN);
@@ -114,4 +120,19 @@ async function processLink(link) {
     } catch (err) {
         console.log(err);
     }
+}
+    
+            const linkN = new URL(link).hostname;
+            await dnsPromise(linkN);
+            return isGood;
+        } catch(err) {
+            console.log(err);
+        }
+    }
+    // Promise.all will take an array of promises and returns a single Promise that 
+    //resolves to an array of the results of the input promises
+    // links.map(processLink) creates a new array populated with the results
+    // of calling a provided function on every element in the calling array.
+    // We could of done it like this or using an arrow function inside.
+    return Promise.all(links.map(processLink));
 }
