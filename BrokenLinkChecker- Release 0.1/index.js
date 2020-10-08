@@ -78,8 +78,10 @@ if (process.argv.length < 3) { // will always be at least 2
 // array of resolved promises). links.map(processLink) creates a new array 
 // populated with these results. We could of done it like this or using an
 // arrow function inside.
+// links is an array, go through every element and call processLink function
+// then promise.all will go through the returned array from map and returns a single Promise 
 function makeCalls(links) {
-    return Promise.all(links.map(processLink));
+    return Promise.all(links.map(processLink)); 
 }
 
 async function processLink(link) {
