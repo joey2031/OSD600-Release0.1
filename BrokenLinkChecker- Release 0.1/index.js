@@ -14,19 +14,16 @@ rest of the indexes contain the arguments that we passed in their respective seq
 const packageJson = require('./package.json');
 const fetch = require("node-fetch"); // to get program version
 const fs = require('fs');
-const colors = require('colors'); 
+const colors = require('colors');
 const util = require('util');
 const dns = require('dns'); //dns resolver
 const { resolve } = require('path');
 const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA" //IPv6 address
-
-
-
-
 let linesArr = [];
 let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
 
+//console.log(process.argv[3]);
 
 if (process.argv.length < 3) { // will always be at least 2
     console.log("ERROR: Please enter command line argument (name of file to be processed).");
@@ -52,7 +49,6 @@ if (process.argv.length < 3) { // will always be at least 2
             }
         }
 
-        makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
             /*
            The every() method tests whether all elements in the array pass the test
            In this case check each result in the array is == true 
@@ -62,7 +58,15 @@ if (process.argv.length < 3) { // will always be at least 2
            are still asynchronous operations pending that have not yet completed fully, including I/O operations
            to process.stdout and process.stderr. In most situations, it is not actually necessary to call
            process.exit() explicitly src: https://nodejs.org/api/process.html#process_process_exit_code
-             */
+        */
+
+        makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
+            if (data.every(result => result === true)) {
+                console.log("exit with 0 for good - Note if using flag output of links may not be accurate");
+                process.exitCode = 0; // better way instead of  process.exit() 
+            } else {
+                console.log("exit with 1 for bad- Note if using flag output of links may not be accurate");
+             
             if(data.every(result => result === true)){
                 console.log("exit with 0 for good");
                 process.exitCode = 0; // better wat instead of  process.exit() 
@@ -76,12 +80,31 @@ if (process.argv.length < 3) { // will always be at least 2
     }
 }
 
+// Promise.all will take an array of promises and returns a single Promise that 
+// resolves to an array of the results of the input promises. (really just returning an 
+// array of resolved promises). links.map(processLink) creates a new array 
+// populated with these results. We could of done it like this or using an
+// arrow function inside.
+// links is an array, go through every element and call processLink function
+// then promise.all will go through the returned array from map and returns a single Promise 
 function makeCalls(links) {
-    async function processLink(link) {
-        try {
-            const response = await fetch(link, { method: "HEAD" });
-            let isGood = false;
+    return Promise.all(links.map(processLink)); 
+}
 
+async function processLink(link) {
+    try {
+        const response = await fetch(link, { method: "HEAD" });
+        let isGood = false;
+        if (process.argv[3] == "--good") {
+            if (response.status == 200) { // good
+                console.log(`${link} was good! status: ${response.status}`.green);
+                isGood = true;
+            }
+        } else if (process.argv[3] == "--bad") {// Here we dont care about the good ones so no need to worry about isGood
+            if (response.status == 404 || response.status == 401) { // bad
+                console.log(`${link} was bad! status: ${response.status}`.red);
+            }
+        } else { // all
             if (response.status == 200) { // good
                 console.log(`${link} was good! status: ${response.status}`.green);
                 isGood = true;
@@ -90,6 +113,14 @@ function makeCalls(links) {
             } else { // unknown
                 console.log(`${link} was unknown! status: ${response.status}`.gray);
             }
+        }
+        const linkN = new URL(link).hostname;
+        await dnsPromise(linkN);
+        return isGood;
+    } catch (err) {
+        console.log(err);
+    }
+}
     
             const linkN = new URL(link).hostname;
             await dnsPromise(linkN);
