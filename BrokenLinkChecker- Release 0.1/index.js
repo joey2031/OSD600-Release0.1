@@ -25,7 +25,7 @@ let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-
 
 //console.log(process.argv[3]);
 
-if (process.argv.length < 3) { // will always be at least 2
+if (process.argv.length < 3) { // will always be at least 3
     console.log("ERROR: Please enter command line argument (name of file to be processed).");
 } else {
     if (process.argv[2] == "v" || process.argv[2] == "version") {
