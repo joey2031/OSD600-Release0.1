@@ -34,11 +34,11 @@ if (process.argv.length < 3) { // will always be at least 3
     } else if (process.argv[2] == "--ignore"){
         //file with ignore links, argv[4] will be the link to process
         const file = process.argv[3];
-        ignoreLinks = fs.readFileSync(file, 'utf-8').split('\n');
-        ignoreLinks = ignoreLinks.filter(w => !w.startsWith('#'));
-        ignoreLinks = ignoreLinks.filter(w => !w.startsWith("www."));
-        //console.log(ignoreLinks);
-        //console.log(ignoreLinks.length);
+        ignoreLinks = fs.readFileSync(file, 'utf-8').split('\n').filter(line => !line.startsWith('#'))
+        ignoreLinks = ignoreLinks.filter(w => !w.startsWith(line => /^https?\:\/\/.+$/gm));
+        //ignoreLinks = fs.readFileSync(file, 'utf-8').filter(line => /^https?\:\/\/.+$/gm)
+        ignoreLinks = ignoreLinks.filter(w => !w.startsWith("www"));//doesn't filter right
+
         if(ignoreLinks.length == 0){
             console.log("Invalid file, file cannt contain only comments (#) and invalid URLs")
             process.exitCode = 1;
