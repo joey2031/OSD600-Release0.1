@@ -35,7 +35,6 @@ if (process.argv.length < 3) { // will always be at least 3
     ignoreLinks = fs.readFileSync(file, 'utf-8')
         .split(/\r?\n/)
         .filter(line => line.startsWith('http://') || line.startsWith('https://'));
-    //console.log(ignoreLinks);
     if (ignoreLinks.length == 0) {
         console.log("Invalid file, file cannot contain only comments (#) and invalid URLs")
         process.exitCode = 1;
@@ -114,7 +113,7 @@ async function processLink(link) {
 
 function populateLinkArr() {
     let processFile = "";
-    if (process.argv[2] == "--ignore") { // file position changes depending if we have --igronr or not
+    if (process.argv[2] == "--ignore") { // file position changes depending if we have --igrone or not
         processFile = process.argv[4];
     } else {
         processFile = process.argv[2];
