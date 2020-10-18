@@ -8,6 +8,7 @@
 1. Download the repository
 2. Although the node_modules are in there run npm install to make sure everything is installed properly.  
 3. open terminal and go to OSD600-Release0.1\BrokenLinkChecker- Release 0.1 directory
+
 <u>Commands Available</u>
 - node index.js v and node index.js version will print the current version of the tool.
 - node index.js test.html (or a different file) Grabs all links and outputs them with a status code (colour coded).
