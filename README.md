@@ -8,7 +8,12 @@
 1. Download the repository
 2. Although the node_modules are in there run npm install to make sure everything is installed properly.  
 3. open terminal and go to OSD600-Release0.1\BrokenLinkChecker- Release 0.1 directory
-4. In the terminal run: node lab1.js test.html (or a different file) there are already have some test files in the project so you can pick one of thoes or create your own
+<u>Commands Available</u>
+- node index.js v and node index.js version will print the current version of the tool.
+- node index.js test.html (or a different file) Grabs all links and outputs them with a status code (colour coded).
+- node index.js test.html --good Outputs only the links with status code of 200 (green), can also use --bad option to only output the broken links with a status code of 404 (red).
+- node index.js --ignore ignore.txt test.txt Runs tool like normal but takes in another file with links to ignore, (dont process)
+
 
 
 <u>Updates</u>
