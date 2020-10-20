@@ -21,11 +21,32 @@ const dns = require('dns'); //dns resolver
 const { resolve } = require('path');
 const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA" //IPv6 address
-let linesArr = [];
 let linkArr = [];
 let ignoreLinks = [];
-let regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
+const regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
 
+// Functions
+const makeCalls = (links) => Promise.all(links.map(processLink));
+const populateLinkArr = () => {
+    let processFile = "";
+    if (process.argv[2] == "--ignore") { // file position changes depending if we have --igrone or not
+        processFile = process.argv[4];
+    } else {
+        processFile = process.argv[2];
+    }
+
+    // Each index in the array stores a line in the file
+    fs.readFileSync(processFile, 'utf8')
+        .split(/\r?\n/)
+        .forEach(line => {
+            if (!regEx.test(line)) {
+                // no match
+                return;
+            }
+            let urls = line.match(regEx);
+            linkArr = linkArr.concat(urls);
+        });
+}
 
 if (process.argv.length < 3) { // will always be at least 3
     console.log("ERROR: Please enter command line argument (name of file to be processed).");
@@ -70,9 +91,6 @@ if (process.argv.length < 3) { // will always be at least 3
     });
 }
 
-function makeCalls(links) {
-    return Promise.all(links.map(processLink));
-}
 
 // This will get called for every element in the array
 async function processLink(link) {
@@ -110,26 +128,4 @@ async function processLink(link) {
         console.log(err);
     }
 }
-
-function populateLinkArr() {
-    let processFile = "";
-    if (process.argv[2] == "--ignore") { // file position changes depending if we have --igrone or not
-        processFile = process.argv[4];
-    } else {
-        processFile = process.argv[2];
-    }
-
-    // Each index in the array stores a line in the file
-    fs.readFileSync(processFile, 'utf8')
-        .split(/\r?\n/)
-        .forEach(line => {
-            if (!regEx.test(line)) {
-                // no match
-                return;
-            }
-            let urls = line.match(regEx);
-            linkArr = linkArr.concat(urls);
-        })
-}
-
 
