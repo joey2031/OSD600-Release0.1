@@ -41,13 +41,13 @@ const populateLinkArr = () => {
     // Each index in the array stores a line in the file
     fs.readFileSync(processFile, 'utf8')
         .split(/\r?\n/)
-        .forEach(line => {
-            if (!regEx.test(line)) {
+        .forEach(line => { // grab links
+            if (!regEx.test(line)) { 
                 // no match
                 return;
             }
-            let urls = line.match(regEx);
-            linkArr = linkArr.concat(urls);
+            let urls = line.match(regEx); // store links in temp array urls
+            linkArr = linkArr.concat(urls); // creates a new array consisting of the elements in the object on which it is called
             linkArr.splice(0, linkArr.length, ...(new Set(linkArr))); // remove duplicates
         });
 }
