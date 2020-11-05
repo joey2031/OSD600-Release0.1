@@ -19,6 +19,7 @@ const colors = require('colors');
 const util = require('util');
 const dns = require('dns'); //dns resolver
 const { resolve } = require('path');
+const { Console } = require('console');
 const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA" //IPv6 address
 let linkArr = [];
@@ -31,7 +32,9 @@ const populateLinkArr = () => {
     let processFile = "";
     if (process.argv[2] == "--ignore") { // file position changes depending if we have --igrone or not
         processFile = process.argv[4];
-    } else {
+    } else if (process.argv[2] == "--telescope"){ // telescope must be running for this to work!
+        processFile = "telescopeText.txt";
+    }else {
         processFile = process.argv[2];
     }
 
@@ -45,6 +48,7 @@ const populateLinkArr = () => {
             }
             let urls = line.match(regEx);
             linkArr = linkArr.concat(urls);
+            linkArr.splice(0, linkArr.length, ...(new Set(linkArr))); // remove duplicates
         });
 }
 
@@ -76,6 +80,8 @@ if (process.argv.length < 3) { // will always be at least 3
         });
     }
 
+} else if (process.argv[2] == "--telescope") {
+    getTelescope();
 } else {
     populateLinkArr();
     makeCalls(linkArr).then((data) => { // pass in linkArr return data (array of booleans)
@@ -98,7 +104,6 @@ async function processLink(link) {
         // get status of each link
         const response = await fetch(link, { method: "HEAD" });
         let isGood = false;
-        // Took out if ignoreLink !=0 since we check that in there
 
         if (process.argv[3] == "--good") { // check for --good --bad
             if (response.status == 200) { // good
@@ -128,4 +133,42 @@ async function processLink(link) {
         console.log(err);
     }
 }
+
+async function getTelescope(){
+    fetch("http://localhost:3000/posts").then(response => {
+        return response.json();
+    }).then(data =>{
+        //console.log(data);
+        // first empty file. This is so the file wont grow every time we run this
+        fs.truncate('telescopeText.txt', 0, function(){ 
+            for(i = 0; i < data.length; i++){
+                //console.log(data[i].url);
+                fetch(`http://localhost:3000${data[i].url}`).then(res =>{
+                    return res.json();
+                }).then(webPageData =>{
+                    fs.appendFile("telescopeText.txt", webPageData.html, (err) =>{
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                });
+            }
+
+        });
+        populateLinkArr();
+        makeCalls(linkArr).then((data) => { 
+            if (data.every(result => result === true)) {
+                console.log("exit with 0 for good - Note if using flag output of links may not be accurate");
+                process.exitCode = 0; 
+            } else {
+                console.log("exit with 1 for bad- Note if using flag output of links may not be accurate");
+                process.exitCode = 1;
+            }
+        }).catch((err) => {
+            console.log(err)
+        });
+    })
+
+}
+
 
