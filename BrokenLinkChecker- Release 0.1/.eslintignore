@@ -1,0 +1,6 @@
+*.html
+*.txt
+*.json
+*.md
+node_modules/
+LICENSE

@@ -11,5 +11,9 @@
   "dependencies": {
     "colors": "^1.4.0",
     "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "prettier": "2.1.2"
   }
 }
