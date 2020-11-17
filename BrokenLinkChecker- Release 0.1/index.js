@@ -11,8 +11,8 @@ var regexLiteral = /abc/;
 
 /*first index contains the path to our node executable, second index contains the path to the script file
 rest of the indexes contain the arguments that we passed in their respective sequence.*/
-const packageJson = require("./package.json");
-const fetch = require("node-fetch"); // to get program version
+const packageJson = require("./package.json"); // to get program version
+const fetch = require("node-fetch");
 const fs = require("fs");
 const colors = require("colors");
 const util = require("util");
@@ -100,6 +100,8 @@ if (process.argv.length < 3) {
   }
 } else if (process.argv[2] == "--telescope") {
   getTelescope();
+} else if (process.argv[2] == "--coverage") {
+  console.log("Getting Code Coverage Analysis...");
 } else {
   populateLinkArr();
   makeCalls(linkArr)
@@ -139,7 +141,7 @@ async function processLink(link) {
         isGood = true;
       }
     } else if (process.argv[3] == "--bad") {
-      // Here we dont care about the good ones so no need to worry about isGood
+      // Here we don't care about the good ones so no need to worry about isGood
       if (response.status == 404 || response.status == 401) {
         // bad
         console.log(
@@ -171,7 +173,7 @@ async function processLink(link) {
     await dnsPromise(linkN);
     return isGood;
   } catch (err) {
-    console.log(err);
+    console.log("The error thrown is: " + err);
   }
 }
 
@@ -223,3 +225,8 @@ async function getTelescope() {
         });
     });
 }
+
+module.exports = {
+  makeCalls,
+  processLink
+};
