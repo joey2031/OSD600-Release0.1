@@ -23,7 +23,6 @@ const dnsPromise = util.promisify(dns.resolve);
 const rrtype = "AAAA"; //IPv6 address
 let linkArr = [];
 let ignoreLinks = [];
-console.log("hello world");
 
 const regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
 
@@ -80,7 +79,7 @@ if (process.argv.length < 3) {
   } else {
     populateLinkArr();
     // Stack overflow: https://stackoverflow.com/questions/34901593/how-to-filter-an-array-from-all-elements-of-another-array
-    // Filter using the trimmed array since that matches the links grabed by the RegEx
+    // Filter using the trimmed array since that matches the links grabbed by the RegEx
     var filtered = linkArr.filter(
       (link) => !ignoreLinks.includes(link),
     );
