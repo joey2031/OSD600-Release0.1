@@ -4,6 +4,8 @@ const { makeCalls, processLink, fn } = require("./index.js");
 
 let linkArr = ["https://www.youtube.com/", "https://www.google.com/", "https://www.facebook.com"];
 let invalidLinkArr = ["https://www.youtube.com/", "https://www.google.com/slkdll", "https://www.facebook.com"];
+let mixedLinkArr = ["https://www.youtube.com/", "https://www.google.com/slkdll", "https://www.facebook.com"];
+
 const fetch = require("node-fetch");
 // Step 1- Pick and set up a testing framework -> Jest
 // Step 2
@@ -14,6 +16,10 @@ test("Pass array of valid links to makeCalls", async () => {
 test("Pass array with some invalid links to makeCalls", async () => {
     const result = await makeCalls(invalidLinkArr);
     expect(result).not.toEqual([true, true, true]);
+});
+test("Pass array with some invalid links and some valid links to makeCalls", async () => {
+    const result = await makeCalls(invalidLinkArr);
+    expect(result).toEqual([true, false, true]);
 });
 
 
