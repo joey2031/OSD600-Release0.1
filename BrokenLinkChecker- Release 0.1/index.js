@@ -11,7 +11,7 @@ var regexLiteral = /abc/;
 
 /*first index contains the path to our node executable, second index contains the path to the script file
 rest of the indexes contain the arguments that we passed in their respective sequence.*/
-const packageJson = require("./package.json"); // to get program version
+const packageJson = require("../package.json"); // to get program version
 const fetch = require("node-fetch");
 const fs = require("fs");
 const colors = require("colors");
