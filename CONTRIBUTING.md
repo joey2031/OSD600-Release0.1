@@ -27,4 +27,4 @@ when working on a file, after you press save prettier and ESLint will be applied
 <u>Tests</u>
 
 To run tests go in OSD600-Release0.1/BrokenLinkChecker- Release 0.1/ and in the terminal run: npm run test
-I set the code coveerage analysis to run with this command. Please keep related tests close togther. For example if I have a test that passes a valid link to the processLink function writer the test to pass the invalid link under or over it.
+I set the code coverage analysis to run with this command. Please keep related tests close togther. For example if I have a test that passes a valid link to the processLink function writer the test to pass the invalid link under or over it.
