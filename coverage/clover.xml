@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1606005033949" clover="3.2.0">
-  <project timestamp="1606005033949" name="All files">
+<coverage generated="1606337926834" clover="3.2.0">
+  <project timestamp="1606337926835" name="All files">
     <metrics statements="95" coveredstatements="34" conditionals="42" coveredconditionals="10" methods="21" coveredmethods="2" elements="158" coveredelements="46" complexity="0" loc="95" ncloc="95" packages="1" files="1" classes="1"/>
     <file name="index.js" path="C:\Users\Joey Assal\Documents\OSD 600\Release 0.1\OSD600-Release0.1\BrokenLinkChecker- Release 0.1\index.js">
       <metrics statements="95" coveredstatements="34" conditionals="42" coveredconditionals="10" methods="21" coveredmethods="2"/>
