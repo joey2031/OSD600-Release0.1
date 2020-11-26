@@ -27,7 +27,7 @@ let ignoreLinks = [];
 const regEx = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
 
 // Functions
-const makeCalls = (links) => Promise.all(links.map(processLink));
+const makeCalls = (links) => links ? Promise.all(links.map(processLink)) : [];
 const populateLinkArr = () => {
   let processFile = "";
   if (process.argv[2] == "--ignore") {
