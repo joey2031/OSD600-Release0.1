@@ -3,7 +3,7 @@ const nock = require("nock");
 const { makeCalls, processLink, fn } = require("./index.js");
 
 let linkArr = ["https://www.youtube.com/", "https://www.google.com/", "https://www.facebook.com"];
-let invalidLinkArr = ["https://www.youtube.com/", "https://www.google.com/slkdll", "https://www.facebook.com"];
+let invalidLinkArr = ["https://www.youtube.com/idj", "https://www.google.com/slkdll", "https://www.facebook.com/dse"];
 let mixedLinkArr = ["https://www.youtube.com/", "https://www.google.com/slkdll", "https://www.facebook.com"];
 
 const fetch = require("node-fetch");
@@ -14,12 +14,12 @@ test("Pass array of valid links to makeCalls", async () => {
     const result = await makeCalls(linkArr);
     expect(result).toEqual([true, true, true]);
 });
-test("Pass array with some invalid links to makeCalls", async () => {
+test("Pass array with only invalid links to makeCalls", async () => {
     const result = await makeCalls(invalidLinkArr);
     expect(result).not.toEqual([true, true, true]);
 });
 test("Pass array with some invalid links and some valid links to makeCalls", async () => {
-    const result = await makeCalls(invalidLinkArr);
+    const result = await makeCalls(mixedLinkArr);
     expect(result).toEqual([true, false, true]);
 });
 
