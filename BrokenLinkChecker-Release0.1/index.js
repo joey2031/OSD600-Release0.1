@@ -102,6 +102,8 @@ if (process.argv.length < 3) {
   getTelescope();
 } else if (process.argv[2] == "--coverage") {
   console.log("Getting Code Coverage Analysis...");
+} else if (process.argv[2] == "v" || process.argv[2] == "version") {
+  console.log(packageJson.name + " Version " + packageJson.version);
 } else {
   populateLinkArr();
   makeCalls(linkArr)
