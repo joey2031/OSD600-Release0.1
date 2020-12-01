@@ -14,6 +14,7 @@
 - node index.js --telescope check links on latest 10 posts on local telescope instance (http://localhost:3000/posts)
 
 <u>installation</u>
+
 This node package is to be ran from the command line with npx. In a node project first install npx via npm
 (npm install npx). Then install this tool via npm (npm install jassal-link-checker). You can then run it
 like: npx jassal-link-checker test.txt
