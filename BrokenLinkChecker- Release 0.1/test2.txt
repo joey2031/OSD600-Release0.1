@@ -1,2 +1,0 @@
-https://www.youtube.com/
-https://github.com/joey2031/OSD600-Release0.1/blob/issue-9/BrokenLinkChecker-%20Release%200.1/index.js#L90

@@ -3,6 +3,9 @@
   "version": "1.0.2",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "jassal-link-checker": "./BrokenLinkChecker-Release0.1/bin/BrokenLink.js"
+  },
   "scripts": {
     "test": "jest --coverage"
   },
